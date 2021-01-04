@@ -18,14 +18,12 @@ module.exports.getPeers = (torrent, callback) => {
 		if(respType(response) === 'connect') {
 			//2. Recieve and check the response.
 			const connResp = parseConnResp(response);
-
 			//3. Send announce request.
 			const announceReq = buildAnnounceReq(connResp.connectionId, torrent);
 			udpSend(socket, announceReq, url);
 		} else if(respType(response) === 'announce') {
 			//4. Check announce response.
 			const announceResp = parseAnnounceResp(response);
-
 			//5. Pass the parsed peers to callback.
 			callback(announceResp.peers);
 		}
@@ -34,7 +32,7 @@ module.exports.getPeers = (torrent, callback) => {
 
 function udpSend(socket, message, rawUrl, callback = () => {}) {
 	const url = urlParse(rawUrl);
-	socket.send(message, 0, message.length, url.port, url.host, callback);
+	socket.send(message, 0, message.length, url.port, url.hostname, callback);
 }
 
 function respType(resp) {
@@ -95,7 +93,7 @@ function buildAnnounceReq(connId, torrent, port=6881) { //6881 is one of the por
 	//num want
 	buf.writeInt32BE(-1, 92);
 	//port
-	buf.writeUInt32BE(port, 96);
+	buf.writeUInt16BE(port, 96);
 
 	return buf;
 }
