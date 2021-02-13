@@ -91,7 +91,7 @@ function buildAnnounceReq(connId, torrent, port=6881) { //6881 is one of the por
 	//key
 	crypto.randomBytes(4).copy(buf, 88);
 	//num want
-	buf.writeInt32BE(-1, 92);
+	buf.writeInt32BE(-1, 92); //Note the writeInt32BE instead of writeUInt32BE
 	//port
 	buf.writeUInt16BE(port, 96);
 
