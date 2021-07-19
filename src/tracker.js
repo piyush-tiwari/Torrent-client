@@ -116,7 +116,7 @@ function parseAnnounceResp(resp) {
 		peers: group(resp.slice(20), 6).map(address => {
 			return {
 				ip: address.slice(0,4).join('.'),
-				port: address.readUInt32BE(4)
+				port: address.readUInt16BE(4)
 			}
 		})
 

@@ -5,7 +5,7 @@ const torrentParser = require('./torrent-parser');
 const util = require('./util');
 
 module.exports.parse = msg => {
-	const id = msg.length > 4 ? msg.readUInt8(4) : null;
+	const id = msg.length > 4 ? msg.readInt8(4) : null;
 	let payload = msg.length > 5 ? msg.slice(5) : null;
 	if(id === 6 || id ===7 || id === 8) {
 		const rest = payload.slice(8);
@@ -101,7 +101,7 @@ module.exports.buildHave = payload => {
 };
 
 module.exports.buildBitfield = bitfield => {
-	const buf = Buffer.alloc(14);
+	const buf = Buffer.alloc(bitfield.length + 1 + 4);
 
 	//length
 	buf.writeUInt32BE(bitfield.length + 1, 0);
@@ -172,7 +172,7 @@ module.exports.buildPort = payload => {
 	//id
 	buf.writeUInt8(9, 4);
 	//listen port
-	buf.writeUInt32BE(payload, 5);
+	buf.writeUInt16BE(payload, 5);
 
 	return buf;
 };

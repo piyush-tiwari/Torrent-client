@@ -17,8 +17,10 @@ module.exports = (torrent, path) => {
 };
 
 function download(peer, torrent, pieces, file) {
-	const socket = net.socket();
-	socket.on('error', console.log);
+
+	//A TCP Socket for each peer
+	const socket = new net.Socket();
+	socket.on('error', e => {});
 	socket.connect(peer.port, peer.ip, () => {
 		socket.write(message.buildHandshake(torrent));
 	});
@@ -94,7 +96,7 @@ function bitfieldHandler(socket, pieces, queue, payload) {
 }
 
 function pieceHandler(socket, pieces, queue, torrent, file, pieceResp) {
-	console.log(pieceResp)
+	pieces.printPercentDone();
 	pieces.addRecieved(pieceResp); //Add recieved Piece.
 
 	//Write contents.
